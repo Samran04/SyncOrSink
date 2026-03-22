@@ -2,16 +2,14 @@
 import { initializeApp, getApps, getApp } from "firebase/app";
 import { getDatabase } from "firebase/database";
 
-// Your web app's Firebase configuration
-// For Next.js, these should be in .env.local
 const firebaseConfig = {
-  apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY || "dummy_api_key",
-  authDomain: process.env.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN || "syncorsink.firebaseapp.com",
-  databaseURL: process.env.NEXT_PUBLIC_FIREBASE_DATABASE_URL || "https://syncorsink-default-rtdb.firebaseio.com",
-  projectId: process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID || "syncorsink",
-  storageBucket: process.env.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET || "syncorsink.appspot.com",
-  messagingSenderId: process.env.NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID || "123456789",
-  appId: process.env.NEXT_PUBLIC_FIREBASE_APP_ID || "1:123456789:web:abcdef"
+  apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY || "AIzaSyAEkVAyTYM4SLw64bdCbWvSdmexXNVDJtk",
+  authDomain: process.env.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN || "syncorsink-399aa.firebaseapp.com",
+  databaseURL: process.env.NEXT_PUBLIC_FIREBASE_DATABASE_URL || "https://syncorsink-399aa-default-rtdb.asia-southeast1.firebasedatabase.app",
+  projectId: process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID || "syncorsink-399aa",
+  storageBucket: process.env.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET || "syncorsink-399aa.firebasestorage.app",
+  messagingSenderId: process.env.NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID || "266459681554",
+  appId: process.env.NEXT_PUBLIC_FIREBASE_APP_ID || "1:266459681554:web:877832b8e6cb2438e219cb",
 };
 
 // Initialize Firebase

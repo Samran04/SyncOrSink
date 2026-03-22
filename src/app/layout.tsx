@@ -8,13 +8,48 @@ const outfit = Outfit({
 });
 
 export const metadata: Metadata = {
-  title: "SyncOrSink - Friendship Test Game",
-  description: "Test your friendship with quirky 'would you rather' situations and get funny roasts!",
+  title: {
+    default: "SyncOrSink - Friendship Test Game",
+    template: "%s | SyncOrSink"
+  },
+  description: "SyncOrSink is the ultimate friendship test game. Answer 'would you rather' questions and see how well you sync with your friends! Get funny roasts, personality results, and friendship scores.",
+  keywords: [
+    "sync or sink", "syncorsink", "sync or sinc", "sinc or sink", "sync or sink game",
+    "friendship test", "friendship test online", "friendship test game", "best friend quiz",
+    "would you rather game", "would you rather friends", "fun quiz with friends",
+    "multiplayer quiz game", "online friendship quiz", "friend compatibility test",
+    "friendship score", "funny roast game", "personality quiz", "fun game with friends",
+    "viral friendship game", "best friend test", "friendship challenge",
+    "quiz game online free", "fun game online", "party game online",
+    "sos game", "sync sink game", "syncorsink game"
+  ],
+  authors: [{ name: "Muhammad Samran", url: "https://muhammadsamran.netlify.app/" }],
+  creator: "Muhammad Samran",
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      "max-snippet": -1,
+      "max-image-preview": "large",
+    }
+  },
   openGraph: {
-    title: "SyncOrSink - Friendship Test Game",
-    description: "Are you true friends or just vibing? Find out in 5 seconds!",
+    title: "SyncOrSink – Are You True Friends? 👀",
+    description: "Answer 10 spicy 'would you rather' questions with friends — get roasted, scored, and find out if you're Soul Sync or Opposite Species! 💀",
     type: "website",
-  }
+    url: "https://syncorsink.app",
+    siteName: "SyncOrSink",
+    locale: "en_US",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "SyncOrSink – Friendship Test Game 🎮",
+    description: "Test how well you sync with your friends in just 10 questions. Get brutally roasted. Share the results. 😂",
+    creator: "@muhammadsamran",
+  },
+  category: "games",
 };
 
 export default function RootLayout({

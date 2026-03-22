@@ -58,6 +58,19 @@ export default function LandingPage() {
           <p className="text-slate-400">Generate a viral result card and expose your friend on Instagram.</p>
         </div>
       </div>
+
+      {/* Creator Credit */}
+      <div className="pt-4 text-sm text-slate-600 animate-in fade-in duration-1000 delay-500 fill-mode-both">
+        Made with ❤️ by{" "}
+        <a
+          href="https://muhammadsamran.netlify.app/"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="text-slate-400 hover:text-primary font-semibold transition-colors underline underline-offset-4"
+        >
+          Muhammad Samran
+        </a>
+      </div>
     </main>
   );
 }
