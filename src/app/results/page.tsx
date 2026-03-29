@@ -2,7 +2,6 @@
 
 import { useEffect, useState, useRef } from "react";
 import Link from "next/link";
-import { Trait } from "@/data/questions";
 import { Share2, RotateCcw, Home } from "lucide-react";
 import { motion } from "framer-motion";
 
@@ -12,78 +11,35 @@ type PersonalityResult = {
   roast: string[];
 };
 
-const personalities: Record<string, PersonalityResult> = {
-  money: {
-    emoji: "💸",
-    title: "Money First Human",
-    roast: ["You would calculate profit even in emotional situations.", "If friendship had ROI... you'd invest carefully."]
-  },
-  betrayal: {
-    emoji: "🐍",
-    title: "Certified Betrayer",
-    roast: ["You don't break trust... you schedule it.", "Your friends double-check everything you say."]
-  },
-  chaos: {
-    emoji: "🤡",
-    title: "Chaos Machine",
-    roast: ["You don't choose options... you create problems.", "Life with you = unexpected plot twists."]
-  },
-  overthinker: {
-    emoji: "🧠",
-    title: "Overthinking Legend",
-    roast: ["You've already imagined 5 outcomes before clicking an option.", "You lose arguments... in your own head."]
-  },
-  lazy: {
-    emoji: "💤",
-    title: "Low Effort Survivor",
-    roast: ["You pick whatever requires least energy.", "Even your decisions are lazy."]
-  },
-  loyalty: {
-    emoji: "🐶",
-    title: "Golden Retriever Friend",
-    roast: ["You'd take a bullet for someone who wouldn't text you back.", "Too pure for this chaotic world."]
-  },
-  attachment: {
-    emoji: "🫂",
-    title: "Clingy Co-Dependent",
-    roast: ["You can't even go to the bathroom without texting your bestie.", "Personal space? Never heard of it."]
-  }
-};
-
 export default function ResultsPage() {
   const [result, setResult] = useState<PersonalityResult | null>(null);
   const cardRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    // Read answers from sessionStorage
     const stored = sessionStorage.getItem("soloAnswers");
     if (stored) {
       try {
-        const answers: Trait[] = JSON.parse(stored);
-        if (answers.length > 0) {
-          // Find most frequent trait
-          const counts = answers.reduce((acc, trait) => {
-            acc[trait] = (acc[trait] || 0) + 1;
-            return acc;
-          }, {} as Record<string, number>);
+        const { answers, questions } = JSON.parse(stored);
+        if (answers && questions && answers.length > 0) {
           
-          let maxTrait = answers[0];
-          let maxCount = 0;
-          for (const [t, c] of Object.entries(counts)) {
-            if (c > maxCount) {
-              maxCount = c;
-              maxTrait = t as Trait;
-            }
+          let gameData = "Player's answers:\\n";
+          for (let i = 0; i < answers.length; i++) {
+             gameData += `Q: ${questions[i].question} -> Chose: ${answers[i]}\\n`;
           }
           
-          const chosenPersonality = personalities[maxTrait] || personalities.chaos;
-          
-          // Randomly select one roast to display to prevent repetition
-          const randomRoast = chosenPersonality.roast[Math.floor(Math.random() * chosenPersonality.roast.length)];
-          
-          setResult({
-            ...chosenPersonality,
-            roast: [randomRoast]
+          fetch("/api/generate-solo-roast", {
+             method: "POST",
+             headers: { "Content-Type": "application/json" },
+             body: JSON.stringify({ gameData })
+          }).then(r => r.json()).then(res => {
+             setResult({
+                title: res.title || "The Unreadable",
+                emoji: res.emoji || "💀",
+                roast: res.roast || ["Your mind is an enigma.", "Even AI gave up."]
+             });
+          }).catch(e => {
+             console.error("Roast error", e);
+             setResult({ title: "Error", emoji: "💀", roast: ["Failed to roast."] });
           });
         }
       } catch (e) {
@@ -91,7 +47,7 @@ export default function ResultsPage() {
       }
     } else {
       // Dummy fallback for testing UI
-      setResult(personalities.chaos);
+      setResult({ title: "Chaos", emoji: "🤡", roast: ["You didn't play.", "Go back."] });
     }
   }, []);
 

@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Question, Trait } from "@/data/questions";
+import { Question } from "@/data/questions";
 import { Timer as TimerIcon } from "lucide-react";
 import { motion } from "framer-motion";
 
@@ -9,7 +9,7 @@ interface GameInterfaceProps {
   question: Question;
   currentIndex: number;
   totalQuestions: number;
-  onAnswer: (trait: Trait) => void;
+  onAnswer: (answer: string) => void;
   timeLimit?: number;
 }
 
@@ -29,7 +29,7 @@ export default function GameInterface({
       setTimeLeft(prev => {
         if (prev <= 0.1) {
           clearInterval(timer);
-          onAnswer("lazy"); // default answer if time runs out
+          onAnswer("Skipped (Ran out of time)"); // default answer if time runs out
           return 0;
         }
         return prev - 0.1;
@@ -37,9 +37,11 @@ export default function GameInterface({
     }, 100);
 
     return () => clearInterval(timer);
-  }, [question.id, timeLimit, onAnswer]);
+  }, [question?.question, timeLimit, onAnswer]);
 
   const progressPercentage = (timeLeft / timeLimit) * 100;
+
+  if (!question) return null;
 
   return (
     <div className="w-full max-w-2xl mx-auto flex flex-col h-full justify-between items-center py-8 space-y-8">
@@ -67,26 +69,26 @@ export default function GameInterface({
       {/* Question Text */}
       <div className="flex-1 flex items-center justify-center text-center px-4 w-full">
         <motion.h2 
-          key={question.id}
+          key={question.question}
           initial={{ opacity: 0, scale: 0.9, y: 20 }}
           animate={{ opacity: 1, scale: 1, y: 0 }}
           className="text-3xl md:text-5xl font-black text-white leading-tight break-words"
         >
-          {question.text}
+          {question.question}
         </motion.h2>
       </div>
 
       {/* Options */}
       <div className="w-full grid grid-cols-1 md:grid-cols-2 gap-4">
         <OptionButton 
-          text={question.optionA.text} 
-          onClick={() => onAnswer(question.optionA.trait)}
+          text={question.optionA} 
+          onClick={() => onAnswer(question.optionA)}
           colorClass="bg-secondary/20 border-secondary text-blue-100 hover:bg-secondary hover:text-white shadow-[0_0_15px_-5px_rgba(59,130,246,0.3)]"
           delay={0.1}
         />
         <OptionButton 
-          text={question.optionB.text} 
-          onClick={() => onAnswer(question.optionB.trait)}
+          text={question.optionB} 
+          onClick={() => onAnswer(question.optionB)}
           colorClass="bg-accent/20 border-accent text-yellow-100 hover:bg-[#EAB308] hover:text-slate-900 shadow-[0_0_15px_-5px_rgba(250,204,21,0.3)]"
           delay={0.2}
         />
@@ -109,3 +111,4 @@ function OptionButton({ text, onClick, colorClass, delay }: { text: string, onCl
     </motion.button>
   );
 }
+

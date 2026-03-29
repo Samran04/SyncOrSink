@@ -1,69 +1,93 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { useParams, useRouter } from "next/navigation";
+import { useParams, useRouter, useSearchParams } from "next/navigation";
 import { ref, onValue, set, update, get } from "firebase/database";
 import { db } from "@/lib/firebase";
+import { useAuth } from "@/lib/AuthContext";
 import GameInterface from "@/components/GameInterface";
-import { questions, getRandomQuestions, Trait } from "@/data/questions";
+import { Question, getRandomFallbackQuestions } from "@/data/questions";
 import { Users, Loader2, Copy } from "lucide-react";
 
 type Player = {
   id: string;
+  displayName?: string;
   ready: boolean;
-  answers: Trait[];
+  answers: string[];
 };
 
 type RoomState = {
   status: "waiting" | "playing" | "finished";
   players: Record<string, Player>;
   currentQuestionIndex: number;
-  questionIds?: number[];
+  questions?: Question[];
 };
 
 export default function MultiplayerRoom() {
   const { roomId } = useParams() as { roomId: string };
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const { user, loading: authLoading } = useAuth();
   
   const [roomData, setRoomData] = useState<RoomState | null>(null);
-  const [playerId, setPlayerId] = useState<string>("");
   const [copied, setCopied] = useState(false);
 
+  // Use Firebase Auth UID as player ID
+  const playerId = user?.uid || "";
+
   useEffect(() => {
-    // Basic local session to remember who we are in this room
-    let pid = sessionStorage.getItem(`playerId_${roomId}`);
-    if (!pid) {
-      pid = `player_${Math.random().toString(36).substring(2, 9)}`;
-      sessionStorage.setItem(`playerId_${roomId}`, pid);
-    }
-    setPlayerId(pid);
+    if (authLoading || !playerId) return;
 
     const roomRef = ref(db, `rooms/${roomId}`);
     
     // Join logic
-    get(roomRef).then((snapshot) => {
+    get(roomRef).then(async (snapshot) => {
       if (!snapshot.exists()) {
+        const vibe = searchParams.get("vibe") || "Gen Z Chaos";
+        let aiQuestions = getRandomFallbackQuestions(10);
+        try {
+          const res = await fetch("/api/generate-questions", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ vibe })
+          });
+          if (res.ok) {
+            aiQuestions = await res.json();
+          }
+        } catch(e) { console.error("Error fetching AI questions", e); }
+
         // Create room
         set(roomRef, {
           status: "waiting",
           currentQuestionIndex: 0,
-          questionIds: getRandomQuestions(10).map(q => q.id),
+          questions: aiQuestions,
           players: {
-            [pid!]: { id: pid, ready: false, answers: [] }
+            [playerId]: {
+              id: playerId,
+              displayName: user?.displayName || "Player 1",
+              ready: false,
+              answers: []
+            }
           }
         });
       } else {
         // Join existing
         const data = snapshot.val() as RoomState;
-        if (!data.players[pid!] && Object.keys(data.players || {}).length >= 2) {
-          alert("Room is full!");
+        if (!data.players[playerId] && (Object.keys(data.players || {}).length >= 10 || data.status !== "waiting")) {
+          alert(data.status !== "waiting" ? "Game already started!" : "Room is full!");
           router.push("/multiplayer");
           return;
         }
         
-        if (!data.players[pid!]) {
+        if (!data.players[playerId]) {
+          const currentCount = Object.keys(data.players || {}).length;
           update(ref(db, `rooms/${roomId}/players`), {
-            [pid!]: { id: pid, ready: false, answers: [] }
+            [playerId]: {
+              id: playerId,
+              displayName: user?.displayName || `Player ${currentCount + 1}`,
+              ready: false,
+              answers: []
+            }
           });
         }
       }
@@ -74,30 +98,27 @@ export default function MultiplayerRoom() {
       if (data) {
         setRoomData(data);
         
-        // Auto-start game if 2 players are both ready
+        // Auto-start game if all players are ready (min 2)
         const playersList = Object.values(data.players || {});
-        if (data.status === "waiting" && playersList.length === 2 && playersList.every(p => p.ready)) {
+        if (data.status === "waiting" && playersList.length >= 2 && playersList.every(p => p.ready)) {
           update(ref(db, `rooms/${roomId}`), { status: "playing" });
         }
         
         // Next question logic if both answered
         if (data.status === "playing") {
           const currentIdx = data.currentQuestionIndex;
-          const totalQ = data.questionIds ? data.questionIds.length : 10;
+          const totalQ = data.questions ? data.questions.length : 10;
           const bothAnswered = playersList.every(p => p.answers && p.answers.length > currentIdx);
           
           if (bothAnswered) {
             if (currentIdx < totalQ - 1) {
-              // Wait 1 second before moving to next question
               setTimeout(() => {
                 update(ref(db, `rooms/${roomId}`), { currentQuestionIndex: currentIdx + 1 });
               }, 1000);
             } else {
               // Finished
               update(ref(db, `rooms/${roomId}`), { status: "finished" });
-              // Push to comparison results
               setTimeout(() => {
-                // Save room data to session storage to pass to results
                 sessionStorage.setItem("multiplayerResult", JSON.stringify(data));
                 router.push(`/room/${roomId}/results`);
               }, 1500);
@@ -108,7 +129,7 @@ export default function MultiplayerRoom() {
     });
 
     return () => unsubscribe();
-  }, [roomId, router]);
+  }, [roomId, router, playerId, authLoading, user?.displayName, searchParams]);
 
   const handleCopy = () => {
     navigator.clipboard.writeText(roomId);
@@ -120,16 +141,25 @@ export default function MultiplayerRoom() {
     update(ref(db, `rooms/${roomId}/players/${playerId}`), { ready: true });
   };
 
-  const handleAnswer = (trait: Trait) => {
+  const handleAnswer = (answer: string) => {
     if (!roomData) return;
     const myAnswers = roomData.players[playerId]?.answers || [];
     
-    // Only answer if we haven't answered this question yet
     if (myAnswers.length === roomData.currentQuestionIndex) {
-      const newAnswers = [...myAnswers, trait];
+      const newAnswers = [...myAnswers, answer];
       update(ref(db, `rooms/${roomId}/players/${playerId}`), { answers: newAnswers });
     }
   };
+
+  // Loading states
+  if (authLoading) {
+    return (
+      <main className="flex-1 flex flex-col items-center justify-center p-6 space-y-4">
+        <Loader2 className="w-12 h-12 text-primary animate-spin" />
+        <p className="text-slate-400 font-medium">Signing you in...</p>
+      </main>
+    );
+  }
 
   if (!roomData || !playerId) {
     return (
@@ -141,7 +171,8 @@ export default function MultiplayerRoom() {
 
   const players = Object.values(roomData.players || {});
   const me = roomData.players[playerId];
-  const isOpponentReady = players.find(p => p.id !== playerId)?.ready;
+  const opponent = players.find(p => p.id !== playerId);
+  const isOpponentReady = opponent?.ready;
 
   if (roomData.status === "waiting") {
     return (
@@ -164,27 +195,35 @@ export default function MultiplayerRoom() {
           <div className="pt-4 space-y-4">
             <div className="flex items-center justify-between p-4 bg-slate-900 rounded-xl border border-slate-700">
               <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-full bg-primary/20 flex items-center justify-center text-primary font-bold">You</div>
-                <span className="text-white font-medium">Player 1</span>
+                <div className="w-10 h-10 rounded-full bg-primary/20 flex items-center justify-center text-primary font-bold text-sm">You</div>
+                <span className="text-white font-medium truncate max-w-[120px]">
+                  {me?.displayName || "Player 1"}
+                </span>
               </div>
               <span className={`text-sm font-bold ${me?.ready ? 'text-primary' : 'text-slate-500'}`}>
                 {me?.ready ? "READY" : "WAITING"}
               </span>
             </div>
 
-            {players.length > 1 ? (
-              <div className="flex items-center justify-between p-4 bg-slate-900 rounded-xl border border-slate-700">
+            {players.filter(p => p.id !== playerId).map((p, i) => (
+              <div key={p.id} className="flex items-center justify-between p-4 bg-slate-900 rounded-xl border border-slate-700">
                 <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 rounded-full bg-secondary/20 flex items-center justify-center text-secondary font-bold">P2</div>
-                  <span className="text-white font-medium">Player 2</span>
+                  <div className={`w-10 h-10 rounded-full flex items-center justify-center font-bold text-sm ${i % 2 === 0 ? 'bg-secondary/20 text-secondary' : 'bg-purple-500/20 text-purple-400'}`}>
+                    P{i + 2}
+                  </div>
+                  <span className="text-white font-medium truncate max-w-[120px]">
+                    {p.displayName || `Player ${i + 2}`}
+                  </span>
                 </div>
-                <span className={`text-sm font-bold ${isOpponentReady ? 'text-primary' : 'text-slate-500'}`}>
-                  {isOpponentReady ? "READY" : "WAITING"}
+                <span className={`text-sm font-bold ${p.ready ? 'text-primary' : 'text-slate-500'}`}>
+                  {p.ready ? "READY" : "WAITING"}
                 </span>
               </div>
-            ) : (
+            ))}
+
+            {players.length < 10 && (
               <div className="flex items-center justify-center p-4 bg-slate-900/50 border border-slate-800 border-dashed rounded-xl h-[74px]">
-                <span className="text-slate-500 animate-pulse flex items-center gap-2"><Loader2 className="w-4 h-4 animate-spin" /> Waiting for friend...</span>
+                <span className="text-slate-500 animate-pulse flex items-center gap-2"><Loader2 className="w-4 h-4 animate-spin" /> Waiting for friends...</span>
               </div>
             )}
           </div>
@@ -215,17 +254,16 @@ export default function MultiplayerRoom() {
   // Playing state
   const currentIdx = roomData.currentQuestionIndex;
   const waitingForOpponent = (me?.answers?.length || 0) > currentIdx;
-  const totalQ = roomData.questionIds ? roomData.questionIds.length : 10;
+  const totalQ = roomData.questions ? roomData.questions.length : 10;
   
-  const currentQId = roomData.questionIds?.[currentIdx];
-  const q = currentQId ? questions.find(q => q.id === currentQId) || questions[currentIdx] : questions[currentIdx];
+  const q = roomData.questions?.[currentIdx];
 
   if (waitingForOpponent) {
     return (
       <main className="flex-1 flex flex-col items-center justify-center p-6 space-y-6 text-center">
         <Loader2 className="w-12 h-12 text-secondary animate-spin" />
         <h2 className="text-2xl font-bold text-white">Waiting for opponent...</h2>
-        <p className="text-slate-400">They're probably overthinking it.</p>
+        <p className="text-slate-400">They&apos;re probably overthinking it.</p>
       </main>
     );
   }
@@ -233,7 +271,7 @@ export default function MultiplayerRoom() {
   return (
     <main className="flex-1 flex flex-col justify-center p-4">
       <GameInterface 
-        question={q} 
+        question={q!} 
         currentIndex={currentIdx}
         totalQuestions={totalQ}
         onAnswer={handleAnswer}

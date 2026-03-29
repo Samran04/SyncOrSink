@@ -1,12 +1,18 @@
-"use client";
-
-import { useState } from "react";
 import Link from "next/link";
 import { ArrowLeft, Play, Timer, Brain } from "lucide-react";
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Solo Practice Test – Discover Your Chaotic Personality",
+  description: "Play SyncOrSink solo! Answer 10 rapid-fire 'would you rather' questions under 5-second time pressure and get your personality roasted. Free, no sign-up needed.",
+  alternates: { canonical: "/single-player" },
+  openGraph: {
+    title: "SyncOrSink Solo Mode – Get Your Personality Roasted 🧠",
+    description: "10 unhinged questions. 5 seconds each. Discover if you're a Chaos Machine, Golden Retriever Friend, or Certified Betrayer. Play free now!",
+  },
+};
 
 export default function SinglePlayerSetup() {
-  const [isReady, setIsReady] = useState(false);
-
   return (
     <main className="flex-1 flex flex-col items-center justify-center p-6 text-center space-y-8 relative">
       <Link href="/" className="absolute top-6 left-6 text-slate-400 hover:text-white flex items-center gap-2 transition-colors">
@@ -18,7 +24,7 @@ export default function SinglePlayerSetup() {
         <div className="inline-flex items-center justify-center p-3 bg-blue-500/10 rounded-full text-blue-400 mb-2">
           <Brain className="w-8 h-8" />
         </div>
-        <h1 className="text-4xl md:text-5xl font-black text-white tracking-tight">Solo Practice test</h1>
+        <h1 className="text-4xl md:text-5xl font-black text-white tracking-tight">Solo Practice Test</h1>
         <p className="text-lg text-slate-400">
           Answer 10 rapid-fire questions to reveal your true chaotic personality. No friends needed to be roasted!
         </p>

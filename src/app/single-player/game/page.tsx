@@ -3,23 +3,23 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import GameInterface from "@/components/GameInterface";
-import { Question, getRandomQuestions, Trait } from "@/data/questions";
+import { Question, getRandomFallbackQuestions } from "@/data/questions";
 import { Loader2 } from "lucide-react";
 
 export default function SinglePlayerGame() {
   const router = useRouter();
   const [gameQuestions, setGameQuestions] = useState<Question[]>([]);
   const [currentIndex, setCurrentIndex] = useState(0);
-  const [answers, setAnswers] = useState<Trait[]>([]);
+  const [answers, setAnswers] = useState<string[]>([]);
   const [isCalculating, setIsCalculating] = useState(false);
 
   useEffect(() => {
     // Generate random questions on client mount to avoid hydration mismatch
-    setGameQuestions(getRandomQuestions(10));
+    setGameQuestions(getRandomFallbackQuestions(10));
   }, []);
 
-  const handleAnswer = (trait: Trait) => {
-    const newAnswers = [...answers, trait];
+  const handleAnswer = (answer: string) => {
+    const newAnswers = [...answers, answer];
     setAnswers(newAnswers);
 
     if (currentIndex < gameQuestions.length - 1) {
@@ -29,11 +29,11 @@ export default function SinglePlayerGame() {
     }
   };
 
-  const finishGame = (finalAnswers: Trait[]) => {
+  const finishGame = (finalAnswers: string[]) => {
     setIsCalculating(true);
     setTimeout(() => {
       if (typeof window !== "undefined") {
-        sessionStorage.setItem("soloAnswers", JSON.stringify(finalAnswers));
+        sessionStorage.setItem("soloAnswers", JSON.stringify({ answers: finalAnswers, questions: gameQuestions }));
         router.push("/results");
       }
     }, 1500);

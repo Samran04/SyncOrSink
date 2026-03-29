@@ -2,9 +2,10 @@
 
 import { useEffect, useState, useRef } from "react";
 import Link from "next/link";
-import { Trait } from "@/data/questions";
+
 import { Share2, Home } from "lucide-react";
 import { motion } from "framer-motion";
+import { useAuth } from "@/lib/AuthContext";
 
 type MatchCategory = {
   emoji: string;
@@ -23,51 +24,88 @@ export default function MultiplayerResults() {
   const [score, setScore] = useState<number>(0);
   const [category, setCategory] = useState<MatchCategory | null>(null);
   const [roasts, setRoasts] = useState<{title: string, msg: string}[]>([]);
+  const { user } = useAuth();
   
   useEffect(() => {
+    if (!user) return;
     try {
       const stored = sessionStorage.getItem("multiplayerResult");
       if (stored) {
         const data = JSON.parse(stored);
-        const players = Object.values(data.players) as { id: string, answers: Trait[] }[];
-        
+        const players = Object.values(data.players) as { id: string, displayName?: string, answers: string[] }[];
         if (players.length >= 2) {
-          const p1 = players[0];
-          const p2 = players[1];
+          const { questions } = data;
+          const myId = user.uid;
+          const me = players.find(p => p.id === myId) || players[0];
           
-          let matches = 0;
-          const len = Math.min(p1.answers.length, p2.answers.length);
+          const maxQuestions = questions?.length || 10;
+          let myMatches = 0;
+          let context = "";
           
-          for (let i = 0; i < len; i++) {
-            if (p1.answers[i] === p2.answers[i]) matches++;
+          for (let i = 0; i < maxQuestions; i++) {
+            // Find majority answer for question i
+            const answerCounts: Record<string, number> = {};
+            players.forEach(p => {
+               const ans = p.answers[i];
+               if (ans) {
+                 answerCounts[ans] = (answerCounts[ans] || 0) + 1;
+               }
+            });
+            
+            // Find the highest count
+            let maxCount = 0;
+            let majorityAns = "";
+            for (const [ans, count] of Object.entries(answerCounts)) {
+              if (count > maxCount) {
+                maxCount = count;
+                majorityAns = ans;
+              }
+            }
+            
+            if (me.answers[i] === majorityAns) {
+               myMatches++;
+            }
+            
+            // Context building for Gemini
+            if (questions && questions[i]) {
+               context += `Q: "${questions[i].question}" -> `;
+               players.forEach(p => {
+                 if (p.answers[i]) {
+                   context += `${p.displayName || 'Player'} chose ${p.answers[i]}, `;
+                 }
+               });
+               context += "\\n";
+            }
           }
           
-          const finalScore = Math.round((matches / len) * 100);
+          const finalScore = Math.round((myMatches / maxQuestions) * 100);
           setScore(finalScore);
           setCategory(getMatchCategory(finalScore));
 
-          // Calculate roasts based on trait counts
-          const p1Counts = getTraitCounts(p1.answers);
-          const p2Counts = getTraitCounts(p2.answers);
+          // Calculate roasts via Gemini API
+          const gameDataString = `${players.length} Players match results context:\\n${context}`;
           
-          const newRoasts = [];
-          if ((p1Counts.betrayal || 0) > (p2Counts.betrayal || 0)) {
-            newRoasts.push({ title: "🐍 Most Likely to Betray", msg: `Player 1 will switch sides in 0.2 seconds.` });
-          } else if ((p2Counts.betrayal || 0) > (p1Counts.betrayal || 0)) {
-            newRoasts.push({ title: "🐍 Most Likely to Betray", msg: `Player 2 will switch sides in 0.2 seconds.` });
-          }
-
-          if ((p1Counts.money || 0) > (p2Counts.money || 0)) {
-            newRoasts.push({ title: "💸 Most Money-Minded", msg: `Player 1 calculates bill splits even in dreams.` });
-          } else if ((p2Counts.money || 0) > (p1Counts.money || 0)) {
-            newRoasts.push({ title: "💸 Most Money-Minded", msg: `Player 2 calculates bill splits even in dreams.` });
-          }
-
-          if ((p1Counts.chaos || 0) > (p2Counts.chaos || 0)) {
-            newRoasts.push({ title: "🤡 Most Chaotic", msg: `If something goes wrong... it's probably Player 1.` });
-          }
-
-          setRoasts(newRoasts);
+          fetch("/api/generate-roast", {
+             method: "POST",
+             headers: { "Content-Type": "application/json" },
+             body: JSON.stringify({ gameData: gameDataString })
+          }).then(r => r.json()).then(result => {
+             const newRoasts = [];
+             if (result.groupRoast) newRoasts.push({ title: "💥 Group Roast", msg: result.groupRoast });
+             if (result.customAwards) {
+                result.customAwards.forEach((a: any) => {
+                  newRoasts.push({ title: `🏆 ${a.playerName}: ${a.title}`, msg: a.roast });
+                });
+             } else {
+                // Fallback to old format just in case API hasn't updated
+                if (result.player1Award) newRoasts.push({ title: `🏆 ${players[0]?.displayName || 'P1'}: ${result.player1Award.title}`, msg: result.player1Award.roast });
+                if (result.player2Award) newRoasts.push({ title: `🏆 ${players[1]?.displayName || 'P2'}: ${result.player2Award.title}`, msg: result.player2Award.roast });
+             }
+             setRoasts(newRoasts);
+          }).catch(e => {
+             console.error("Roast error", e);
+             setRoasts([{ title: "💀 Error", msg: "Failed to generate AI roast." }]);
+          });
         }
       } else {
         // Fallback for UI testing
@@ -78,14 +116,7 @@ export default function MultiplayerResults() {
     } catch (e) {
       console.error(e);
     }
-  }, []);
-
-  const getTraitCounts = (answers: Trait[]) => {
-    return answers.reduce((acc, trait) => {
-      acc[trait] = (acc[trait] || 0) + 1;
-      return acc;
-    }, {} as Record<string, number>);
-  };
+  }, [user]);
 
   const handleShare = async () => {
     if (navigator.share && category) {
