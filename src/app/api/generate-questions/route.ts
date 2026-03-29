@@ -19,10 +19,11 @@ export async function POST(req: NextRequest) {
       model: "gemini-1.5-flash",
       generationConfig: {
         responseMimeType: "application/json",
+        temperature: 0.9,
       },
     });
 
-    const prompt = `You are a witty, edgy writer for a Gen Z party game called SyncOrSink. Generate 10 fast-paced 'Would You Rather' questions based on the theme: ${vibe}. The questions should be hilarious, relatable, and force players into tough, 5-second gut-reaction choices. Return ONLY a JSON array of objects, where each object has 'question', 'optionA', and 'optionB' properties with string values.`;
+    const prompt = `You are an absolutely ruthless, unhinged, and savage writer for a brutal, Gen Z party game called SyncOrSink. Generate 10 NEW and UNIQUE fast-paced 'Would You Rather' questions based on the theme: ${vibe}. The questions should be incredibly dark, fiercely debatable, deeply uncomfortable, and force players into agonizing, absurd 5-second gut-reaction choices. Push the boundaries of the vibe. Do NOT repeat classic, basic, or vanilla questions. Here is a random salt to ensure completely fresh chaos: ${Date.now()}-${Math.random()}. Return ONLY a JSON array of objects, where each object has 'question', 'optionA', and 'optionB' properties with string values.`;
 
     const result = await model.generateContent(prompt);
     const responseText = result.response.text();
