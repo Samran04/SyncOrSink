@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Outfit } from "next/font/google";
+import Script from "next/script";
 import "./globals.css";
 import ClientProviders from "@/components/ClientProviders";
 
@@ -84,6 +85,12 @@ export default function RootLayout({
     >
       <head>
         <link rel="canonical" href="https://syncorsink.app" />
+        <Script 
+          async 
+          src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4296561262192063" 
+          crossOrigin="anonymous" 
+          strategy="afterInteractive"
+        />
       </head>
       <body className="min-h-full flex flex-col font-sans bg-background text-foreground bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-slate-900 via-slate-950 to-slate-950">
         <ClientProviders>

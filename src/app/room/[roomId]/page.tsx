@@ -31,6 +31,7 @@ export default function MultiplayerRoom() {
   
   const [roomData, setRoomData] = useState<RoomState | null>(null);
   const [copied, setCopied] = useState(false);
+  const [showAd, setShowAd] = useState(false);
 
   // Use Firebase Auth UID as player ID
   const playerId = user?.uid || "";
@@ -118,9 +119,18 @@ export default function MultiplayerRoom() {
             } else {
               // Finished
               update(ref(db, `rooms/${roomId}`), { status: "finished" });
+              
+              const gamesPlayed = parseInt(localStorage.getItem("gamesPlayed") || "0") + 1;
+              localStorage.setItem("gamesPlayed", gamesPlayed.toString());
+
               setTimeout(() => {
                 sessionStorage.setItem("multiplayerResult", JSON.stringify(data));
-                router.push(`/room/${roomId}/results`);
+                
+                if (gamesPlayed % 2 === 0) {
+                  setShowAd(true);
+                } else {
+                  router.push(`/room/${roomId}/results`);
+                }
               }, 1500);
             }
           }
@@ -130,6 +140,17 @@ export default function MultiplayerRoom() {
 
     return () => unsubscribe();
   }, [roomId, router, playerId, authLoading, user?.displayName, searchParams]);
+
+  // Sync display name if user edits it while in room
+  useEffect(() => {
+    if (playerId && user?.displayName && roomData?.players[playerId]) {
+      if (roomData.players[playerId].displayName !== user.displayName) {
+        update(ref(db, `rooms/${roomId}/players/${playerId}`), {
+          displayName: user.displayName,
+        });
+      }
+    }
+  }, [user?.displayName, playerId, roomId, roomData?.players]);
 
   const handleCopy = () => {
     navigator.clipboard.writeText(roomId);
@@ -150,6 +171,29 @@ export default function MultiplayerRoom() {
       update(ref(db, `rooms/${roomId}/players/${playerId}`), { answers: newAnswers });
     }
   };
+
+  if (showAd) {
+    return (
+      <main className="fixed inset-0 z-[100] bg-black text-white flex flex-col items-center justify-center p-6 space-y-6">
+        <div className="text-xs text-slate-400 font-bold uppercase tracking-widest mb-2 px-3 py-1 bg-slate-900 border border-slate-700/50 rounded-full">
+          Advertisement
+        </div>
+        
+        {/* Placeholder Ad Content */}
+        <div className="w-full max-w-lg aspect-video bg-neutral-900 border border-neutral-800 rounded-2xl flex items-center justify-center relative overflow-hidden group">
+            <div className="absolute inset-0 bg-gradient-to-tr from-primary/10 to-transparent" />
+            <span className="text-neutral-500 font-bold tracking-widest">[ GOOGLE AD SPACE ]</span>
+        </div>
+
+        <button 
+          onClick={() => router.push(`/room/${roomId}/results`)}
+          className="mt-8 px-6 py-3 bg-slate-800 hover:bg-slate-700 text-white font-bold rounded-xl transition-all"
+        >
+          Skip Ad & See Results
+        </button>
+      </main>
+    );
+  }
 
   // Loading states
   if (authLoading) {
