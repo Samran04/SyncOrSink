@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
 
 import { Share2, Home } from "lucide-react";
@@ -93,7 +93,7 @@ export default function MultiplayerResults() {
              const newRoasts = [];
              if (result.groupRoast) newRoasts.push({ title: "💥 Group Roast", msg: result.groupRoast });
              if (result.customAwards) {
-                result.customAwards.forEach((a: any) => {
+                result.customAwards.forEach((a: { playerName: string; title: string; roast: string }) => {
                   newRoasts.push({ title: `🏆 ${a.playerName}: ${a.title}`, msg: a.roast });
                 });
              } else {

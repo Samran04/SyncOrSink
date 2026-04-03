@@ -7,7 +7,7 @@ import { db } from "@/lib/firebase";
 import { useAuth } from "@/lib/AuthContext";
 import GameInterface from "@/components/GameInterface";
 import { Question, getRandomFallbackQuestions } from "@/data/questions";
-import { Users, Loader2, Copy } from "lucide-react";
+import { Loader2, Copy } from "lucide-react";
 
 type Player = {
   id: string;
@@ -215,8 +215,6 @@ export default function MultiplayerRoom() {
 
   const players = Object.values(roomData.players || {});
   const me = roomData.players[playerId];
-  const opponent = players.find(p => p.id !== playerId);
-  const isOpponentReady = opponent?.ready;
 
   if (roomData.status === "waiting") {
     return (
@@ -315,6 +313,7 @@ export default function MultiplayerRoom() {
   return (
     <main className="flex-1 flex flex-col justify-center p-4">
       <GameInterface 
+        key={currentIdx}
         question={q!} 
         currentIndex={currentIdx}
         totalQuestions={totalQ}

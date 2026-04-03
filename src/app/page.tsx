@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Users, User, Zap } from "lucide-react";
+import { Users, User } from "lucide-react";
 
 const jsonLd = {
   "@context": "https://schema.org",

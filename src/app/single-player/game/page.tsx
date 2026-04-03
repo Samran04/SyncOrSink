@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useRouter } from "next/navigation";
 import GameInterface from "@/components/GameInterface";
 import { Question, getRandomFallbackQuestions } from "@/data/questions";
@@ -8,15 +8,11 @@ import { Loader2 } from "lucide-react";
 
 export default function SinglePlayerGame() {
   const router = useRouter();
-  const [gameQuestions, setGameQuestions] = useState<Question[]>([]);
+  // Lazy initializer runs once on mount - avoids hydration mismatch and effect-setState
+  const [gameQuestions] = useState<Question[]>(() => getRandomFallbackQuestions(10));
   const [currentIndex, setCurrentIndex] = useState(0);
   const [answers, setAnswers] = useState<string[]>([]);
   const [isCalculating, setIsCalculating] = useState(false);
-
-  useEffect(() => {
-    // Generate random questions on client mount to avoid hydration mismatch
-    setGameQuestions(getRandomFallbackQuestions(10));
-  }, []);
 
   const handleAnswer = (answer: string) => {
     const newAnswers = [...answers, answer];
@@ -53,6 +49,7 @@ export default function SinglePlayerGame() {
   return (
     <main className="flex-1 flex flex-col justify-center p-4">
       <GameInterface 
+        key={currentIndex}
         question={gameQuestions[currentIndex]} 
         currentIndex={currentIndex}
         totalQuestions={gameQuestions.length}

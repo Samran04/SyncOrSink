@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useAuth } from "@/lib/AuthContext";
-import { Zap, LogIn, LogOut, User, Loader2, Pencil, Check, Dices } from "lucide-react";
+import { LogIn, LogOut, User, Loader2, Pencil, Check, Dices } from "lucide-react";
 import { useState } from "react";
 import { generateRandomName } from "@/lib/nameGenerator";
 

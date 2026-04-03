@@ -67,7 +67,8 @@ export async function claimUsername(
     // Claim the new name
     await set(nameRef, uid);
     return { success: true };
-  } catch (err: any) {
-    return { success: false, message: err.message || "Database error" };
+  } catch (err) {
+    const error = err as Error;
+    return { success: false, message: error.message || "Database error" };
   }
 }

@@ -29,7 +29,7 @@ export async function POST(req: NextRequest) {
     const responseText = result.response.text();
 
     return NextResponse.json(JSON.parse(responseText));
-  } catch (error: any) {
+  } catch (error) {
     console.error("Gemini API Error (Questions):", error);
     return NextResponse.json(
       { error: "Failed to generate questions." },

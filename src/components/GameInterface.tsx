@@ -22,14 +22,15 @@ export default function GameInterface({
 }: GameInterfaceProps) {
   const [timeLeft, setTimeLeft] = useState(timeLimit);
 
+  // Only runs the countdown interval. The component is re-keyed by the parent
+  // on each question change (key={currentIndex}), so useState(timeLimit) reinitializes
+  // automatically — no need to call setTimeLeft(timeLimit) here.
   useEffect(() => {
-    setTimeLeft(timeLimit);
-    
     const timer = setInterval(() => {
       setTimeLeft(prev => {
         if (prev <= 0.1) {
           clearInterval(timer);
-          onAnswer("Skipped (Ran out of time)"); // default answer if time runs out
+          onAnswer("Skipped (Ran out of time)");
           return 0;
         }
         return prev - 0.1;
@@ -37,7 +38,7 @@ export default function GameInterface({
     }, 100);
 
     return () => clearInterval(timer);
-  }, [question?.question, timeLimit, onAnswer]);
+  }, [onAnswer]);
 
   const progressPercentage = (timeLeft / timeLimit) * 100;
 

@@ -96,23 +96,24 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
     try {
       await authPromise;
-    } catch (error: any) {
-      if (error.code === "auth/credential-already-in-use") {
+    } catch (error) {
+      const firebaseError = error as { code?: string };
+      if (firebaseError.code === "auth/credential-already-in-use") {
         try {
-          const credential = GoogleAuthProvider.credentialFromError(error);
+          const credential = GoogleAuthProvider.credentialFromError(error as Parameters<typeof GoogleAuthProvider.credentialFromError>[0]);
           if (credential) {
             await signInWithCredential(auth, credential);
             return; // Successful login without opening a second popup
           }
           await signInWithPopup(auth, provider);
-        } catch (fallbackError: any) {
+        } catch (fallbackError) {
            console.error("Fallback sign-in error:", fallbackError);
         }
       } else if (
-        error.code === "auth/cancelled-popup-request"
+        firebaseError.code === "auth/cancelled-popup-request"
       ) {
         console.warn("Popup closed or cancelled by user.");
-      } else if (error.code === "auth/popup-blocked") {
+      } else if (firebaseError.code === "auth/popup-blocked") {
         console.warn("Popup blocked! Falling back to redirect...");
         if (user?.isAnonymous && auth.currentUser) {
           await linkWithRedirect(auth.currentUser, provider);
@@ -151,9 +152,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         // Force a re-render with the new user object
         setUser({ ...auth.currentUser });
         return { success: true };
-      } catch (error: any) {
+      } catch (error) {
         console.error("Update profile error:", error);
-        return { success: false, message: error.message };
+        const err = error as Error;
+        return { success: false, message: err.message };
       }
     }
     return { success: false, message: "Not authenticated" };

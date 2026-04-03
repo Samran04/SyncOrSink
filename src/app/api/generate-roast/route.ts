@@ -38,7 +38,7 @@ Return the result EXACTLY as a JSON object with this shape:
     const cleanJson = responseText.replace(/```json/gi, '').replace(/```/g, '').trim();
 
     return NextResponse.json(JSON.parse(cleanJson));
-  } catch (error: any) {
+  } catch (error) {
     console.error("Gemini API Error (Roasts):", error);
     return NextResponse.json(
       { error: "Failed to generate roasts." },
