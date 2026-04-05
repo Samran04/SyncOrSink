@@ -44,24 +44,13 @@ export default function MultiplayerRoom() {
     // Join logic
     get(roomRef).then(async (snapshot) => {
       if (!snapshot.exists()) {
-        const vibe = searchParams.get("vibe") || "Gen Z Chaos";
-        let aiQuestions = getRandomFallbackQuestions(10);
-        try {
-          const res = await fetch("/api/generate-questions", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ vibe })
-          });
-          if (res.ok) {
-            aiQuestions = await res.json();
-          }
-        } catch(e) { console.error("Error fetching AI questions", e); }
+        const gameQuestions = getRandomFallbackQuestions(10);
 
         // Create room
         set(roomRef, {
           status: "waiting",
           currentQuestionIndex: 0,
-          questions: aiQuestions,
+          questions: gameQuestions,
           players: {
             [playerId]: {
               id: playerId,

@@ -6,6 +6,7 @@ import Link from "next/link";
 import { Share2, Home } from "lucide-react";
 import { motion } from "framer-motion";
 import { useAuth } from "@/lib/AuthContext";
+import { generateLocalGroupRoasts } from "@/lib/localRoast";
 
 type MatchCategory = {
   emoji: string;
@@ -90,6 +91,12 @@ export default function MultiplayerResults() {
              headers: { "Content-Type": "application/json" },
              body: JSON.stringify({ gameData: gameDataString })
           }).then(r => r.json()).then(result => {
+             if (result.error || (!result.groupRoast && !result.customAwards)) {
+               console.warn("Roast API failed or returned empty, using local fallback:", result.detail || result.error);
+               const fallbackRoasts = generateLocalGroupRoasts(players);
+               setRoasts(fallbackRoasts);
+               return;
+             }
              const newRoasts = [];
              if (result.groupRoast) newRoasts.push({ title: "💥 Group Roast", msg: result.groupRoast });
              if (result.customAwards) {
@@ -97,14 +104,14 @@ export default function MultiplayerResults() {
                   newRoasts.push({ title: `🏆 ${a.playerName}: ${a.title}`, msg: a.roast });
                 });
              } else {
-                // Fallback to old format just in case API hasn't updated
                 if (result.player1Award) newRoasts.push({ title: `🏆 ${players[0]?.displayName || 'P1'}: ${result.player1Award.title}`, msg: result.player1Award.roast });
                 if (result.player2Award) newRoasts.push({ title: `🏆 ${players[1]?.displayName || 'P2'}: ${result.player2Award.title}`, msg: result.player2Award.roast });
              }
              setRoasts(newRoasts);
           }).catch(e => {
-             console.error("Roast error", e);
-             setRoasts([{ title: "💀 Error", msg: "Failed to generate AI roast." }]);
+             console.warn("Roast fetch error, using local fallback:", e);
+             const fallbackRoasts = generateLocalGroupRoasts(players);
+             setRoasts(fallbackRoasts);
           });
         }
       } else {

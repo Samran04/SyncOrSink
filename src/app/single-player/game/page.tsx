@@ -8,7 +8,7 @@ import { Loader2 } from "lucide-react";
 
 export default function SinglePlayerGame() {
   const router = useRouter();
-  // Lazy initializer runs once on mount - avoids hydration mismatch and effect-setState
+  // Pick 10 random questions from the 100+ static pool on mount
   const [gameQuestions] = useState<Question[]>(() => getRandomFallbackQuestions(10));
   const [currentIndex, setCurrentIndex] = useState(0);
   const [answers, setAnswers] = useState<string[]>([]);

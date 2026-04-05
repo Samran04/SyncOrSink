@@ -4,6 +4,7 @@ import { useEffect, useState, useRef } from "react";
 import Link from "next/link";
 import { Share2, RotateCcw, Home } from "lucide-react";
 import { motion } from "framer-motion";
+import { generateLocalRoast } from "@/lib/localRoast";
 
 type PersonalityResult = {
   emoji: string;
@@ -32,23 +33,29 @@ export default function ResultsPage() {
              headers: { "Content-Type": "application/json" },
              body: JSON.stringify({ gameData })
           }).then(r => r.json()).then(res => {
-             setResult({
-                title: res.title || "The Unreadable",
-                emoji: res.emoji || "💀",
-                roast: res.roast || ["Your mind is an enigma.", "Even AI gave up."]
-             });
+             if (res.error || !res.roast || !res.roast.length) {
+               console.warn("Roast API failed or returned empty, using local roast:", res.detail || res.error);
+               const localResult = generateLocalRoast(answers, questions);
+               setResult(localResult);
+             } else {
+               setResult({
+                  title: res.title,
+                  emoji: res.emoji,
+                  roast: res.roast
+               });
+             }
           }).catch(e => {
-             console.error("Roast error", e);
-             setResult({ title: "Error", emoji: "💀", roast: ["Failed to roast."] });
+             console.warn("Roast fetch error, using local roast:", e);
+             const localResult = generateLocalRoast(answers, questions);
+             setResult(localResult);
           });
         }
       } catch (e) {
         console.error(e);
       }
     } else {
-      // Dummy fallback for testing UI - async to satisfy lint rule
       setTimeout(() => {
-        setResult({ title: "Chaos", emoji: "🤡", roast: ["You didn't play.", "Go back."] });
+        setResult({ title: "No Game Data", emoji: "🤡", roast: ["You didn't play.", "Go back and answer some questions first!"] });
       }, 0);
     }
   }, []);
