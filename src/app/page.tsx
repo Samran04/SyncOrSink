@@ -225,6 +225,41 @@ export default function LandingPage() {
           </div>
         </section>
 
+        {/* Blog/Articles Section - Value Enrichment */}
+        <section className="w-full max-w-5xl py-12 px-6">
+          <div className="flex flex-col md:flex-row items-end justify-between mb-10 gap-4">
+            <div className="space-y-2 text-left">
+              <h2 className="text-3xl md:text-4xl font-black text-white">
+                Friendship <span className="text-accent">Guides</span> & Insights
+              </h2>
+              <p className="text-slate-400">Deep dives into why we sync (or sink).</p>
+            </div>
+            <Link href="/articles" className="text-primary font-bold hover:underline underline-offset-4 flex items-center gap-2 group">
+              View all articles
+              <span className="group-hover:translate-x-1 transition-transform">→</span>
+            </Link>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 text-left">
+            <Link href="/articles/why-would-you-rather-games-matter" className="group p-8 rounded-3xl bg-slate-900 border border-slate-800 hover:border-primary/50 transition-all hover:scale-[1.02]">
+              <span className="text-xs font-bold text-primary uppercase tracking-widest mb-4 block">Psychology</span>
+              <h3 className="text-2xl font-bold text-white mb-4 group-hover:text-primary transition-colors">Why &quot;Would You Rather&quot; is the Ultimate Friendship Test</h3>
+              <p className="text-slate-400 text-sm leading-relaxed mb-6">Discover the psychology behind rapid-fire decision making and why these simple questions reveal so much about your compatibility.</p>
+              <span className="text-white text-sm font-bold flex items-center gap-2">
+                Read Article <span className="text-primary group-hover:translate-x-1 transition-transform">→</span>
+              </span>
+            </Link>
+            <Link href="/articles/test-your-friendship-online" className="group p-8 rounded-3xl bg-slate-900 border border-slate-800 hover:border-accent/50 transition-all hover:scale-[1.02]">
+              <span className="text-xs font-bold text-accent uppercase tracking-widest mb-4 block">Gaming</span>
+              <h3 className="text-2xl font-bold text-white mb-4 group-hover:text-accent transition-colors">How to Test Your Friendship Score Online (Properly)</h3>
+              <p className="text-slate-400 text-sm leading-relaxed mb-6">A guide on using SyncOrSink to find out if your friend group is &quot;Soul Sync&quot; or simply &quot;Opposite Species&quot;.</p>
+              <span className="text-white text-sm font-bold flex items-center gap-2">
+                Read Article <span className="text-accent group-hover:translate-x-1 transition-transform">→</span>
+              </span>
+            </Link>
+          </div>
+        </section>
+
         {/* Creator Credit */}
         <div className="pt-4 pb-8 text-sm text-slate-600 animate-in fade-in duration-1000 delay-500 fill-mode-both">
           Made with ❤️ by{" "}
