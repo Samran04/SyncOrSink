@@ -52,7 +52,7 @@ export default function ArticleTwo() {
               Step 1: The Setup
             </h2>
             <p className="text-slate-300 leading-relaxed">
-              First, head over to <Link href="/multiplayer" className="text-white hover:text-primary underline font-bold">Multiplayer Mode</Link>. SyncOrSink works best when you&apos;re either in the same room physically or in a voice call together. The real fun isn&apos;t just the result—it&apos;s the yelling that happens during the 5-second countdown.
+              First, head over to <Link href="/multiplayer" className="text-white hover:text-primary underline font-bold">Multiplayer Mode</Link>. SyncOrSink works best when you&apos;re either in the same room physically or in a voice call together. The real fun isn&apos;t just the result—it&apos;s the yelling that happens during the 10-second countdown.
             </p>
             <ul className="list-disc pl-6 space-y-2 text-slate-300">
               <li>Create a new room.</li>

@@ -34,7 +34,7 @@ export default function About() {
               We started as a small project to create the ultimate icebreaker. While most friendship tests are a bit too &quot;nice,&quot; we wanted something that captured the chaotic energy of real friend groups.
             </p>
             <p className="text-slate-300 leading-relaxed">
-              By combining high-pressure decision making (the 5-second timer) with brutal personality roasts, we created a game that doesn&apos;t just test your friendship—it reveals your group&apos;s true chaotic nature.
+              By combining high-pressure decision making (the 10-second timer) with brutal personality roasts, we created a game that doesn&apos;t just test your friendship—it reveals your group&apos;s true chaotic nature.
             </p>
             <div className="pt-4">
               <Link href="/multiplayer" className="inline-flex items-center gap-2 bg-primary text-slate-950 font-bold px-6 py-3 rounded-xl hover:scale-[1.05] transition-transform">
@@ -63,7 +63,7 @@ export default function About() {
               <Zap className="text-primary w-6 h-6" />
             </div>
             <h3 className="text-xl font-bold text-white mb-3">Chaos First</h3>
-            <p className="text-slate-400 text-sm leading-relaxed">We believe the best memories are made in the heat of a 5-second decision.</p>
+            <p className="text-slate-400 text-sm leading-relaxed">We believe the best memories are made in the heat of a 10-second decision.</p>
           </div>
           <div className="p-8 rounded-2xl bg-slate-900/50 border border-slate-800 hover:border-accent/30 transition-colors group">
             <div className="w-12 h-12 rounded-xl bg-accent/10 flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">

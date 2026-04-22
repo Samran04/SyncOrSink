@@ -18,6 +18,42 @@ const articles = [
     color: "primary"
   },
   {
+    slug: "5-fun-icebreaker-games",
+    title: "5 Fun Icebreaker Games for Your Next Virtual Hangout",
+    excerpt: "Stop asking 'what did you do today?' and start playing games that actually build connections.",
+    date: "April 22, 2026",
+    readTime: "6 min read",
+    tag: "Social",
+    color: "accent"
+  },
+  {
+    slug: "psychology-of-choice",
+    title: "The Psychology of Choice: Why Some Options Are Impossible",
+    excerpt: "Understanding the mental tug-of-war that happens during a 10-second countdown.",
+    date: "April 22, 2026",
+    readTime: "7 min read",
+    tag: "Psychology",
+    color: "danger"
+  },
+  {
+    slug: "humor-and-compatibility",
+    title: "Humor and Compatibility: Why Shared Laughter is the Best Sync",
+    excerpt: "If you can laugh together at a 10-second panic choice, you can survive anything.",
+    date: "April 22, 2026",
+    readTime: "5 min read",
+    tag: "Relationships",
+    color: "accent"
+  },
+  {
+    slug: "host-perfect-game-night",
+    title: "How to Host the Perfect Digital Game Night",
+    excerpt: "Flawless execution, zero technical difficulties, and maximum chaos. Let's build a night to remember.",
+    date: "April 22, 2026",
+    readTime: "6 min read",
+    tag: "Guide",
+    color: "primary"
+  },
+  {
     slug: "test-your-friendship-online",
     title: "How to Test Your Friendship Score Online (Properly)",
     excerpt: "A guide on using SyncOrSink to find out if your friend group is 'Soul Sync' or simply 'Opposite Species'.",

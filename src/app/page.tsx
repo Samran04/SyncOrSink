@@ -9,7 +9,7 @@ const jsonLd = {
       "name": "SyncOrSink",
       "alternateName": ["Sync or Sink", "Sync Or Sink Game", "SyncOrSink Game"],
       "url": "https://syncorsink.app",
-      "description": "SyncOrSink is the ultimate free online friendship test game. Answer 'would you rather' questions in 5 seconds with friends, get brutally roasted, and discover your friendship score.",
+      "description": "SyncOrSink is the ultimate free online friendship test game. Answer 'would you rather' questions in 10 seconds with friends, get brutally roasted, and discover your friendship score.",
       "applicationCategory": "GameApplication",
       "operatingSystem": "Any",
       "offers": {
@@ -35,7 +35,7 @@ const jsonLd = {
           "name": "What is SyncOrSink?",
           "acceptedAnswer": {
             "@type": "Answer",
-            "text": "SyncOrSink is a free online friendship test game where you and your friends answer 'would you rather' questions under 5-second time pressure. Based on how similarly (or differently) you answer, you get a friendship sync score and a brutally funny roast of your combined choices."
+            "text": "SyncOrSink is a free online friendship test game where you and your friends answer 'would you rather' questions under 10-second time pressure. Based on how similarly (or differently) you answer, you get a friendship sync score and a brutally funny roast of your combined choices."
           }
         },
         {
@@ -43,7 +43,7 @@ const jsonLd = {
           "name": "How do you play Sync or Sink?",
           "acceptedAnswer": {
             "@type": "Answer",
-            "text": "Playing is easy! Start a multiplayer room and share the room code with a friend. Both of you answer 10 'would you rather' questions with only 5 seconds per question. At the end, SyncOrSink compares your answers and gives you a sync score plus a personality roast. You can also play solo to discover your own chaotic personality!"
+            "text": "Playing is easy! Start a multiplayer room and share the room code with a friend. Both of you answer 10 'would you rather' questions with only 10 seconds per question. At the end, SyncOrSink compares your answers and gives you a sync score plus a personality roast. You can also play solo to discover your own chaotic personality!"
           }
         },
         {
@@ -125,7 +125,7 @@ export default function LandingPage() {
           <div className="pt-12 grid grid-cols-1 md:grid-cols-3 gap-6 max-w-4xl text-left animate-in fade-in slide-in-from-bottom-16 duration-1000 delay-300 fill-mode-both">
             <div className="p-6 rounded-2xl bg-slate-800/50 border border-slate-700/50 backdrop-blur-sm">
               <div className="text-3xl mb-3">⏱️</div>
-              <h3 className="text-lg font-bold text-white mb-2">5-Second Pressure</h3>
+              <h3 className="text-lg font-bold text-white mb-2">10-Second Pressure</h3>
               <p className="text-slate-400">No time to overthink. Your true chaotic nature will be revealed.</p>
             </div>
             <div className="p-6 rounded-2xl bg-slate-800/50 border border-slate-700/50 backdrop-blur-sm">
@@ -156,7 +156,7 @@ export default function LandingPage() {
             <div className="text-center space-y-4">
               <div className="w-16 h-16 mx-auto rounded-2xl bg-accent/10 border border-accent/20 flex items-center justify-center text-3xl font-black text-accent">2</div>
               <h3 className="text-xl font-bold text-white">Answer 10 Questions in 5 Seconds</h3>
-              <p className="text-slate-400">Both players answer the same &ldquo;would you rather&rdquo; questions with a 5-second timer. No overthinking allowed!</p>
+              <p className="text-slate-400">Both players answer the same &ldquo;would you rather&rdquo; questions with a 10-second timer. No overthinking allowed!</p>
             </div>
             <div className="text-center space-y-4">
               <div className="w-16 h-16 mx-auto rounded-2xl bg-danger/10 border border-danger/20 flex items-center justify-center text-3xl font-black text-danger">3</div>
@@ -179,7 +179,7 @@ export default function LandingPage() {
                 <span className="text-primary ml-4 group-open:rotate-45 transition-transform text-2xl">+</span>
               </summary>
               <div className="px-6 pb-6 text-slate-400 leading-relaxed">
-                SyncOrSink is a free online friendship test game where you and your friends answer &ldquo;would you rather&rdquo; questions under 5-second time pressure. Based on how similarly (or differently) you answer, you get a friendship sync score and a brutally funny roast of your combined choices.
+                SyncOrSink is a free online friendship test game where you and your friends answer &ldquo;would you rather&rdquo; questions under 10-second time pressure. Based on how similarly (or differently) you answer, you get a friendship sync score and a brutally funny roast of your combined choices.
               </div>
             </details>
 
@@ -189,7 +189,7 @@ export default function LandingPage() {
                 <span className="text-primary ml-4 group-open:rotate-45 transition-transform text-2xl">+</span>
               </summary>
               <div className="px-6 pb-6 text-slate-400 leading-relaxed">
-                Playing is easy! Start a multiplayer room and share the room code with a friend. Both of you answer 10 &ldquo;would you rather&rdquo; questions with only 5 seconds per question. At the end, SyncOrSink compares your answers and gives you a sync score plus a personality roast. You can also play solo to discover your own chaotic personality!
+                Playing is easy! Start a multiplayer room and share the room code with a friend. Both of you answer 10 &ldquo;would you rather&rdquo; questions with only 10 seconds per question. At the end, SyncOrSink compares your answers and gives you a sync score plus a personality roast. You can also play solo to discover your own chaotic personality!
               </div>
             </details>
 

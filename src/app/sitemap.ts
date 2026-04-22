@@ -63,6 +63,30 @@ export default function sitemap(): MetadataRoute.Sitemap {
       priority: 0.7,
     },
     {
+      url: "https://syncorsink.app/articles/5-fun-icebreaker-games",
+      lastModified: new Date(),
+      changeFrequency: "monthly",
+      priority: 0.7,
+    },
+    {
+      url: "https://syncorsink.app/articles/psychology-of-choice",
+      lastModified: new Date(),
+      changeFrequency: "monthly",
+      priority: 0.7,
+    },
+    {
+      url: "https://syncorsink.app/articles/humor-and-compatibility",
+      lastModified: new Date(),
+      changeFrequency: "monthly",
+      priority: 0.7,
+    },
+    {
+      url: "https://syncorsink.app/articles/host-perfect-game-night",
+      lastModified: new Date(),
+      changeFrequency: "monthly",
+      priority: 0.7,
+    },
+    {
       url: "https://syncorsink.app/articles/test-your-friendship-online",
       lastModified: new Date(),
       changeFrequency: "monthly",

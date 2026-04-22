@@ -107,6 +107,44 @@ export default function MultiplayerSetupClient() {
           </form>
         </div>
       </div>
+      <section className="w-full max-w-2xl pt-12 space-y-8 text-left animate-in fade-in duration-1000 delay-300 fill-mode-both">
+        <div className="h-px w-full bg-slate-800" />
+        
+        <div className="space-y-4">
+          <h2 className="text-2xl font-bold text-white">How Multiplayer Sync Works</h2>
+          <p className="text-slate-400 leading-relaxed">
+            SyncOrSink isn&apos;t just about matching answers—it&apos;s about sharing a wavelength. When you and your friend enter a room, our real-time engine ensures you both see the same &ldquo;would you rather&rdquo; questions at the exact same moment. 
+          </p>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pt-2">
+            <div className="p-5 rounded-2xl bg-slate-900 border border-slate-800">
+              <h3 className="text-primary font-bold mb-2">Simultaneous Play</h3>
+              <p className="text-slate-500 text-sm">Both players have 10 seconds per question. No time to discuss, only time to react.</p>
+            </div>
+            <div className="p-5 rounded-2xl bg-slate-900 border border-slate-800">
+              <h3 className="text-accent font-bold mb-2">Sync Calculation</h3>
+              <p className="text-slate-500 text-sm">Our algorithm analyzes your choice patterns to generate a compatibility score and a custom roast.</p>
+            </div>
+          </div>
+        </div>
+
+        <div className="space-y-4">
+          <h2 className="text-2xl font-bold text-white">Pro Tips for Besties</h2>
+          <ul className="space-y-3 text-slate-400">
+             <li className="flex gap-3">
+                <span className="text-primary font-bold">01.</span>
+                <span>Get on a voice call. Hearing your friend&apos;s panic as the 10-second timer runs out is half the experience.</span>
+             </li>
+             <li className="flex gap-3">
+                <span className="text-primary font-bold">02.</span>
+                <span>Don&apos;t overthink. Your first gut reaction is usually the most &ldquo;syncable&rdquo; answer.</span>
+             </li>
+             <li className="flex gap-3">
+                <span className="text-primary font-bold">03.</span>
+                <span>Share your results! Use the result card to expose your friend&apos;s unhinged choices on social media.</span>
+             </li>
+          </ul>
+        </div>
+      </section>
     </main>
   );
 }

@@ -52,14 +52,14 @@ export default function ArticleOne() {
           <section className="space-y-6">
             <h2 className="text-3xl font-bold text-white flex items-center gap-3">
               <Zap className="text-primary w-8 h-8" />
-              1. The Power of the 5-Second Filter
+              1. The Power of the 10-Second Filter
             </h2>
             <p className="text-slate-300 leading-relaxed">
               When you have minutes to think about an answer, you aren&apos;t giving your real opinion—you&apos;re giving the <span className="italic">socially acceptable</span> version of it. You filter your thoughts to match what you think people want to hear.
             </p>
             <div className="bg-slate-900 p-6 rounded-2xl border border-slate-800">
               <p className="text-slate-200 font-medium italic">
-                &quot;The 5-second timer on SyncOrSink isn&apos;t just for tension; it&apos;s a psychological barrier-breaker. It bypasses the logical, filtering brain and forces the intuitive, chaotic self to respond.&quot;
+                &quot;The 10-second timer on SyncOrSink isn&apos;t just for tension; it&apos;s a psychological barrier-breaker. It bypasses the logical, filtering brain and forces the intuitive, chaotic self to respond.&quot;
               </p>
             </div>
           </section>
@@ -70,7 +70,7 @@ export default function ArticleOne() {
               2. Shared Chaos Builds Bonds
             </h2>
             <p className="text-slate-300 leading-relaxed">
-              Laughter is a powerful bonding agent, but shared confusion is even stronger. When you and a friend both choose a totally bizarre option in under 5 seconds, it creates an instant &quot;insider&quot; moment. 
+              Laughter is a powerful bonding agent, but shared confusion is even stronger. When you and a friend both choose a totally bizarre option in under 10 seconds, it creates an instant &quot;insider&quot; moment. 
             </p>
             <p className="text-slate-300 leading-relaxed">
               Conversely, when you realize your best friend has a completely opposite stance on something minor—like whether to fight 100 duck-sized horses or one horse-sized duck—it leads to the kind of passionate, low-stakes debate that strengthens friendship roots.

@@ -18,7 +18,7 @@ export default function GameInterface({
   currentIndex,
   totalQuestions,
   onAnswer,
-  timeLimit = 5
+  timeLimit = 10
 }: GameInterfaceProps) {
   const [timeLeft, setTimeLeft] = useState(timeLimit);
 

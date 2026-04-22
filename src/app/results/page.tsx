@@ -83,7 +83,7 @@ export default function ResultsPage() {
       
       <div className="space-y-2 animate-in fade-in slide-in-from-top-4 duration-700">
         <h2 className="text-xl text-primary font-bold uppercase tracking-widest">Your Results Are In</h2>
-        <p className="text-slate-400">We analyzed your 5-second panic choices.</p>
+        <p className="text-slate-400">We analyzed your 10-second panic choices.</p>
       </div>
 
       {/* Shareable Card */}

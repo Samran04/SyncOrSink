@@ -4,7 +4,7 @@ import type { Metadata } from "next";
 
 export const metadata: Metadata = {
   title: "Solo Practice Test – Discover Your Chaotic Personality",
-  description: "Play SyncOrSink solo! Answer 10 rapid-fire 'would you rather' questions under 5-second time pressure and get your personality roasted. Free, no sign-up needed.",
+  description: "Play SyncOrSink solo! Answer 10 rapid-fire 'would you rather' questions under 10-second time pressure and get your personality roasted. Free, no sign-up needed.",
   alternates: { canonical: "/single-player" },
   openGraph: {
     title: "SyncOrSink Solo Mode – Get Your Personality Roasted 🧠",
@@ -34,7 +34,7 @@ export default function SinglePlayerSetup() {
         <div className="space-y-4 text-left">
           <div className="flex items-center gap-3 text-slate-300">
             <Timer className="w-5 h-5 text-accent" />
-            <span>5 seconds per question</span>
+            <span>10 seconds per question</span>
           </div>
           <div className="flex items-center gap-3 text-slate-300">
             <Brain className="w-5 h-5 text-accent" />
@@ -50,6 +50,23 @@ export default function SinglePlayerSetup() {
           <span>Start Now</span>
         </Link>
       </div>
+
+      <section className="w-full max-w-2xl pt-12 space-y-6 text-left animate-in fade-in duration-1000 delay-300 fill-mode-both">
+        <h2 className="text-2xl font-bold text-white text-center">The Science of the Solo Roast</h2>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div className="p-4 bg-slate-900/50 border border-slate-800 rounded-xl">
+             <h3 className="text-primary font-bold mb-2">No Filters</h3>
+             <p className="text-slate-400 text-sm">Playing alone removes the social filter. Your 10-second choices reveal your rawest instincts.</p>
+          </div>
+          <div className="p-4 bg-slate-900/50 border border-slate-800 rounded-xl">
+             <h3 className="text-accent font-bold mb-2">Pattern Analysis</h3>
+             <p className="text-slate-400 text-sm">We analyze the &ldquo;vibe&rdquo; of your choices to categorize your chaotic energy.</p>
+          </div>
+        </div>
+        <p className="text-slate-500 text-center text-sm pt-4 italic">
+          &quot;The most honest conversation you can have is during a rapid-fire choice game.&quot;
+        </p>
+      </section>
     </main>
   );
 }
